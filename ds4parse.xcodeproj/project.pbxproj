@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7D732C4324A68FED0010E60E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D732C4224A68FED0010E60E /* main.cpp */; };
+		7D732C4B24A6901D0010E60E /* libhidapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D732C4A24A6900D0010E60E /* libhidapi.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		7D732C3F24A68FED0010E60E /* ds4parse */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ds4parse; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D732C4224A68FED0010E60E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		7D732C4A24A6900D0010E60E /* libhidapi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libhidapi.a; path = ../../../../usr/local/Cellar/hidapi/0.9.0/lib/libhidapi.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D732C4B24A6901D0010E60E /* libhidapi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +46,7 @@
 			children = (
 				7D732C4124A68FED0010E60E /* ds4parse */,
 				7D732C4024A68FED0010E60E /* Products */,
+				7D732C4924A6900D0010E60E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +64,14 @@
 				7D732C4224A68FED0010E60E /* main.cpp */,
 			);
 			path = ds4parse;
+			sourceTree = "<group>";
+		};
+		7D732C4924A6900D0010E60E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7D732C4A24A6900D0010E60E /* libhidapi.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,6 +188,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/local/Cellar/hidapi/0.9.0/include/**";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -228,6 +241,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/local/Cellar/hidapi/0.9.0/include/**";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -239,6 +253,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/hidapi/0.9.0/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -247,6 +265,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/hidapi/0.9.0/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
