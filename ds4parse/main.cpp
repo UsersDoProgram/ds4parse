@@ -7,44 +7,67 @@
 //
 
 #include <iostream>
+#include <ctype.h>
 #include <hidapi/hidapi.h>
 #include <cassert>
+#include "ds4.h"
+
 
 #define bt_vid 0x054C
 #define bt_pid 0x05C4
-#define usb_vid 0x054c
-#define usb_pid 0x05c4
-#define bufLen 64
-class ds4{
-    ds4(){
-        
-    }
-public:
-    void update();
-private:
-    /* Data Range 0-255 */
-    uint8_t L2_val;
-    uint8_t R2_val;
-    uint8_t LY;
-    uint8_t LX;
-    uint8_t RX;
-    uint8_t RY;
-};
+#define usb_vid 0x054C
+#define usb_pid 0x05C4
 int main(int argc, const char * argv[]) {
-    // insert code here...
+    ds4 myds4;
+    bool isUSB;
+    if (argc > 2 && isdigit(*argv[1]))
+    {
+        std::cout<< "Provide 0 for USB\nOr 1 for BT..."<<std::endl;
+        return -1;
+    }
+    if ( ((int) *argv[1]) == 0)
+        isUSB = true;
+    else if( ((int) *argv[1]) != 0)
+        isUSB = false;
+    /*
+        size of report:
+            64 if usb
+            28 if bt
+        Only 28 bytes of Bluetooth Report are useful
+    */
+    int bufLen = (isUSB) ? 64 : 28;
+    //wchar_t* serial = (wchar_t *)"CUH-ZCT1x";
     int res,vid,pid;
-    vid = bt_vid;
-    pid = bt_pid;
-    unsigned char* ds4Data = (unsigned char*) malloc(sizeof(unsigned char)*64);
+    vid = (isUSB) ? usb_vid : bt_vid;
+    pid = (isUSB) ? usb_pid : bt_pid;
+    printf("VID:%X \tPID:%X\nBuffer Length:%d\t Mode:%s\n",vid,pid,bufLen,
+    (isUSB) ? (const char *)"USB" : (const char *)"Bluetooth");
+    unsigned char* ds4Data = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
     unsigned char buff[bufLen];
+    
     res = hid_init();
     assert(res!=-1);
     
     hid_device* ds4_dev = NULL;
     ds4_dev = hid_open(vid,pid,NULL);
     assert(ds4_dev!=NULL);
+
+    for(int bNum=0;bNum<bufLen;bNum++) //allocate report array
+        buff[bNum] = *(ds4Data+bNum);
+
+    hid_set_nonblocking(ds4_dev,0);
+    hid_read(ds4_dev,ds4Data,bufLen);
     
-    hid_read(ds4_dev, ds4Data, bufLen);
-    std::cout << "Hello, World!\n";
+    if(isUSB)
+        myds4.parseUSB(buff);
+    else
+        myds4.parseBT(buff);
+
+    std::cout << "Tri Pressed: " << myds4.isPressed("tri")<<std::endl;
+    free(ds4Data);
+    hid_close(ds4_dev);
+    res = hid_exit();
+    assert(res!=-1);
+    
     return 0;
 }
