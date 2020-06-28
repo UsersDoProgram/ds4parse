@@ -49,19 +49,18 @@ int main(int argc, const char * argv[]) {
     hid_device* ds4_dev = NULL;
     ds4_dev = hid_open(vid,pid,NULL);
     assert(ds4_dev!=NULL);
-
-    for(int bNum=0;bNum<bufLen;bNum++) //allocate report array
-        buff[bNum] = *(ds4Data+bNum);
     
     hid_set_nonblocking(ds4_dev,0);
     hid_read(ds4_dev,ds4Data,bufLen);
+
+    for(int bNum=0;bNum<bufLen;bNum++) //allocate report array
+        buff[bNum] = *(ds4Data+bNum);
     
     if(isUSB)
         myds4.parseUSB(buff);
     else
         myds4.parseBT(buff);
-
-    std::cout << "Tri Pressed: " << myds4.isPressed("tri")<<std::endl;
+    printf("Byte[11] = %u\n",(unsigned int)buff[11]);
     free(ds4Data);
     hid_close(ds4_dev);
     res = hid_exit();
