@@ -22,25 +22,23 @@ int main(int argc, const char * argv[]) {
     bool isUSB;
     if (argc > 2 && isdigit(*argv[1]))
     {
-        std::cout<< "Provide 0 for USB\nOr 1 for BT..."<<std::endl;
+        std::cout<< "Provide 0 for USB\nANY other digit for BT..."<<std::endl;
         return -1;
     }
-    if ( ((int) *argv[1]) == 0)
-        isUSB = true;
-    else if( ((int) *argv[1]) != 0)
-        isUSB = false;
+    isUSB = (atoi(argv[1]) == 0) ? true: false; 
     /*
         size of report:
             64 if usb
             28 if bt
         Only 28 bytes of Bluetooth Report are useful
     */
+
     int bufLen = (isUSB) ? 64 : 28;
     //wchar_t* serial = (wchar_t *)"CUH-ZCT1x";
     int res,vid,pid;
     vid = (isUSB) ? usb_vid : bt_vid;
     pid = (isUSB) ? usb_pid : bt_pid;
-    printf("VID:%X \tPID:%X\nBuffer Length:%d\t Mode:%s\n",vid,pid,bufLen,
+    printf("VID:0x%X \tPID:0x%X\nBuffer Length:%d\t Mode:%s\n",vid,pid,bufLen,
     (isUSB) ? (const char *)"USB" : (const char *)"Bluetooth");
     unsigned char* ds4Data = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
     unsigned char buff[bufLen];
@@ -54,7 +52,7 @@ int main(int argc, const char * argv[]) {
 
     for(int bNum=0;bNum<bufLen;bNum++) //allocate report array
         buff[bNum] = *(ds4Data+bNum);
-
+    
     hid_set_nonblocking(ds4_dev,0);
     hid_read(ds4_dev,ds4Data,bufLen);
     

@@ -38,6 +38,7 @@ void ds4::parseBT(unsigned char data[28]){
     printf("%d",this->tri);
 }
 void ds4::parseUSB(unsigned char data[64]){
+    printf("USB Parse\n");
     /* Get Axis */
     this->LX = data[1];
     this->LY = data[2];
