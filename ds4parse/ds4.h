@@ -33,13 +33,27 @@ bool ds4::isPressed(const char* dStr){
     return false;
 }
 void ds4::parseBT(unsigned char data[28]){
-    this->LX = data[4];
-    this->LY = data[5];
-    this->RX = data[6];
-    this->RY = data[7];
-    this->tri = ((data[8] & 128) >> 7) == 1 ? 1 : 0;
-    this->crc = ((data[8] & 64) >> 6) == 1 ? 1 : 0;
-
+    this->LX = data[3]; 
+    this->LY = data[4];
+    this->RX = data[5];
+    this->RY = data[6];
+    this->tri = ((data[7] & 128) >> 7) == 1 ? 1 : 0;
+    this->crc = ((data[7] & 64) >> 6) == 1 ? 1 : 0;
+    this->x = ((data[7] & 32) >> 5) == 1 ? 1 : 0;
+    this->sqr = ((data[7] & 16) >> 4) == 1 ? 1 : 0;
+    /* Make DPAD Analyzer */
+    
+    this->R3 = ((data[8] & 128) >> 7) == 1 ? 1 : 0;
+    this->L3 = ((data[8] & 64)>>6) == 1 ? 1 : 0;
+    this->OPTS = ((data[8] & 32) >> 5 == 1) ? 1 : 0;
+    this->SHARE = ((data[8] & 16) >> 4 == 1) ? 1 : 0;
+    this->R2 = ((data[8] & 8) >> 3 == 1) ? 1 : 0;
+    this->L2 = ((data[8] & 4) >> 2 == 1) ? 1 : 0;
+    this->R1 = ((data[8] & 2) >> 1) == 1 ? 1 : 0;
+    this->L1 = ((data[8] & 1) == 1) ? 1 : 0;
+    /* Get Bumper Intensity */
+    this->L2_val = data[10];
+    this->R2_val = data[11];
 }
 void ds4::parseUSB(unsigned char data[64]){
     printf("USB Parse\n");

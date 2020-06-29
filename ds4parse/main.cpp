@@ -33,7 +33,7 @@ int main(int argc, const char * argv[]) {
         Only 28 bytes of Bluetooth Report are useful
     */
 
-    int bufLen = (isUSB) ? 64 : 28;
+    int bufLen = (isUSB) ? 0x40 : 0x48;
     //wchar_t* serial = (wchar_t *)"CUH-ZCT1x";
     int res,vid,pid;
     vid = (isUSB) ? usb_vid : bt_vid;
@@ -42,7 +42,7 @@ int main(int argc, const char * argv[]) {
     (isUSB) ? (const char *)"USB" : (const char *)"Bluetooth");
     unsigned char* ds4Data = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
     unsigned char buff[bufLen];
-    
+
     res = hid_init();
     assert(res!=-1);
     

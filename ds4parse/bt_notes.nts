@@ -1,0 +1,8 @@
+Offset is 0x03
+byte[3] is L Stick X Axis
+byte[4] is L Stick Y Axis
+byte[5] is R Stick X Axis
+byte[6] is R Stick Y axis
+byte[7] is DPAD nd 4 Core Buttons
+byte[10] is L2
+byte[11] is R2
