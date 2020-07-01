@@ -18,6 +18,7 @@
 #define usb_vid 0x054C
 #define usb_pid 0x05C4
 int main(int argc, const char * argv[]) {
+    printf("DS4 BT ADDR:%s\n","1C:96:5A:67:BC:7F");
     ds4 myds4;
     bool isUSB;
     if (argc > 2 && isdigit(*argv[1]))
@@ -60,7 +61,18 @@ int main(int argc, const char * argv[]) {
         myds4.parseUSB(buff);
     else
         myds4.parseBT(buff);
-    printf("Byte[11] = %u\n",(unsigned int)buff[11]);
+    /* Analysis */
+
+    printf("△: %s\tO: %s\tX: %s\t□: %s\n", 
+    (myds4.isPressed("tri")) ? "true" : "false", (myds4.isPressed("crc")) ? "true" : "false",
+    (myds4.isPressed("x")) ? "true" : "false", (myds4.isPressed("sqr")) ? "true" : "false");
+
+    char* dpadStr = (char *) malloc(sizeof(char)*2);
+    myds4.getDPAD(dpadStr);
+    printf("DPAD:%s\n",dpadStr);
+
+
+    /* Deallocations */
     free(ds4Data);
     hid_close(ds4_dev);
     res = hid_exit();
