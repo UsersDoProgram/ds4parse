@@ -1,17 +1,37 @@
+#include <cassert>
+#include <hidapi/hidapi.h>
 #include <string>
 #include <stdio.h>
 #include <cstdint>
 #include <cstring>
 #include <cmath>
+enum e_dpadKeys {N,NE,E,SE,S,SW,W,NW};
+typedef enum e_dpadKeys dpadKeys;
+
+enum ds4keys {
+    Lx,Ly,
+    Rx,Ry,
+    TRI,CRC,X,SQR,DPAD,
+    keyR3,keyL3,OPTIONS,keySHARE,btnR2,btnL2,keyR1,keyL1,
+    L2Val,R2Val
+    };
+
 class ds4{
 public:
-    ds4();
+    ds4(int vid, int pid, bool isUSB);
     ~ds4();
-    void parseBT(unsigned char data[28]);
-    void parseUSB(unsigned char data[64]);
-    int isPressed(const char * dStr);
+    int isPressed(ds4keys key);
     void getDPAD(char* retStr/*return string*/);
+    void read();
 private:
+    int bufLen;
+    hid_device* dev;
+    void parseBT();
+    void parseUSB();
+    unsigned char* dataPtr = NULL;
+    unsigned char data[12];
+    int vid,pid;
+    bool isUSB;
     unsigned char dpadBits[4];
     char* dpadBits_bin; 
     /* Data Range 0-255 */
@@ -40,32 +60,52 @@ private:
     0 if String passed wasn't pressed
     1 if String passed was pressed
 */
-int ds4::isPressed(const char* dStr){
-    if ( std::strcmp(dStr,"tri") == 0)
-        return this->tri;
-    if ( std::strcmp(dStr,"sqr") == 0)
-        return this->sqr;
-    if ( std::strcmp(dStr,"x") == 0)
-        return this->x;
-    if ( std::strcmp(dStr,"crc") == 0)
-        return this->crc;
-    if ( std::strcmp(dStr, "L1") == 0)
-        return this->L1;
-    if ( std::strcmp(dStr,"R1") == 0)
-        return this->R1;
-    if ( std::strcmp(dStr,"L2V") == 0)
-        return this->L2_val;
-    if( std::strcmp(dStr,"R2V") == 0)
-        return this->R2_val;
-    if( std::strcmp(dStr,"LY") == 0)
+int ds4::isPressed(ds4keys key){
+    switch (key)
+    {
+    case Lx:
+        return this->LX; 
+    case Ly:
         return this->LY;
-    if( std::strcmp(dStr,"LX") == 0)
-        return this->LX;
-    if( std::strcmp(dStr,"RX") == 0)
+    case Rx:
         return this->RX;
-    return -1;
+    case Ry:
+        return this->RY;
+    case TRI:
+        return this->tri; 
+    case CRC:
+        return this->crc;
+    case X:
+        return this->x;
+    case SQR:
+        return this->sqr;
+    case DPAD:
+        return this->dpad;
+    case keyR3:
+        return this->R3;
+    case keyL3:
+        return this->L3;
+    case OPTIONS:
+        return this->OPTS;
+    case keySHARE:
+        return this->SHARE;
+    case btnR2:
+        return this->R2;
+    case btnL2:
+        return this->L2;
+    case keyR1:
+        return this->R1;
+    case keyL1:
+        return this->L1;
+    case L2Val:
+        return this->L2_val;
+    case R2Val:
+        return this->R2_val;
+    default:
+        return -1;
+    }
 }
-void ds4::parseBT(unsigned char data[28]){
+void ds4::parseBT(){
     this->LX = data[3]; 
     this->LY = data[4];
     this->RX = data[5];
@@ -94,7 +134,7 @@ void ds4::parseBT(unsigned char data[28]){
     this->L2_val = data[10];
     this->R2_val = data[11];
 }
-void ds4::parseUSB(unsigned char data[64]){
+void ds4::parseUSB(){
     printf("USB Parse\n");
     /* Get Axis */
     this->LX = data[1];
@@ -161,9 +201,30 @@ void ds4::getDPAD(char *retStr){
             break;
     }
 }
-ds4::ds4(){
+
+void ds4::read(){
+    hid_read(dev,dataPtr,bufLen);
+    for(int byte=0;byte<bufLen;byte++)
+        data[byte] = * (dataPtr+byte);
+    (isUSB) ? parseUSB() : parseBT();
+}
+
+ds4::ds4(int vid,int pid,bool isUSB){
+    this->dpad = -1;
+    assert( hid_init() != -1 ); 
+    this->vid = vid;
+    this->pid = pid;
+    this->isUSB = isUSB;
     this->dpadBits_bin = (char *) malloc(sizeof(char)*6);
+    bufLen = (isUSB) ? 10 : 12;
+    this->dev = hid_open(vid,pid,NULL);
+    assert (dev!=NULL);
+    hid_set_nonblocking(dev,0);
+    this->dataPtr = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
 }
 ds4::~ds4(){
+    free(dataPtr);
+    hid_close(dev);
+    hid_exit();
     free(this->dpadBits_bin);
 }

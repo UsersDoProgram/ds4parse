@@ -19,7 +19,6 @@
 #define usb_pid 0x05C4
 int main(int argc, const char * argv[]) {
     printf("DS4 BT ADDR:%s\n","1C:96:5A:67:BC:7F");
-    ds4 myds4;
     bool isUSB;
     if (argc > 2 && isdigit(*argv[1]))
     {
@@ -34,49 +33,21 @@ int main(int argc, const char * argv[]) {
         Only 28 bytes of Bluetooth Report are useful
     */
 
-    int bufLen = (isUSB) ? 0x40 : 0x48;
-    //wchar_t* serial = (wchar_t *)"CUH-ZCT1x";
-    int res,vid,pid;
+    int vid,pid;
     vid = (isUSB) ? usb_vid : bt_vid;
     pid = (isUSB) ? usb_pid : bt_pid;
-    printf("VID:0x%X \tPID:0x%X\nBuffer Length:%d\t Mode:%s\n",vid,pid,bufLen,
+    printf("VID:0x%X \tPID:0x%X\tMode:%s\n",vid,pid,
     (isUSB) ? (const char *)"USB" : (const char *)"Bluetooth");
-    unsigned char* ds4Data = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
-    unsigned char buff[bufLen];
-
-    res = hid_init();
-    assert(res!=-1);
-    
-    hid_device* ds4_dev = NULL;
-    ds4_dev = hid_open(vid,pid,NULL);
-    assert(ds4_dev!=NULL);
-    
-    hid_set_nonblocking(ds4_dev,0);
-    hid_read(ds4_dev,ds4Data,bufLen);
-
-    for(int bNum=0;bNum<bufLen;bNum++) //allocate report array
-        buff[bNum] = *(ds4Data+bNum);
-    
-    if(isUSB)
-        myds4.parseUSB(buff);
-    else
-        myds4.parseBT(buff);
     /* Analysis */
-
-    printf("△: %s\tO: %s\tX: %s\t□: %s\n", 
-    (myds4.isPressed("tri")) ? "true" : "false", (myds4.isPressed("crc")) ? "true" : "false",
-    (myds4.isPressed("x")) ? "true" : "false", (myds4.isPressed("sqr")) ? "true" : "false");
+    ds4 myds4(vid,pid,isUSB);
+    myds4.read();
+    printf("△: %s\t\tO: %s\t\tX: %s\t\t□: %s\n", 
+    (myds4.isPressed(TRI)) ? "true" : "false", (myds4.isPressed(CRC) == 1) ? "true" : "false",
+    (myds4.isPressed(X)) ? "true" : "false", (myds4.isPressed(SQR) == 1) ? "true" : "false");
 
     char* dpadStr = (char *) malloc(sizeof(char)*2);
     myds4.getDPAD(dpadStr);
     printf("DPAD:%s\n",dpadStr);
 
-
-    /* Deallocations */
-    free(ds4Data);
-    hid_close(ds4_dev);
-    res = hid_exit();
-    assert(res!=-1);
-    
     return 0;
 }
