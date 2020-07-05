@@ -2,11 +2,11 @@
 ===================
 
 
-Just some simple code for parsing output from a DS4 Controller.
-GUI support is coming!
-Building is simple and easy, simple point to the header of the hidapi share lib or archive.
-My particular build script can be seen within the Makefile.
-Installing the archive and binary for hidapi is dirt simple.
+Just some simple code for parsing output from a DS4 Controller.<br>
+GUI support is coming!<br>
+Building is simple and easy, simple point to the header of the hidapi share lib or archive.<br>
+My particular build script can be seen within the Makefile.<br>
+Installing the archive and binary for hidapi is dirt simple.<br>
 
 <pre>
 
@@ -29,8 +29,9 @@ For Linux:
 -TODO
 
 ***
-Add GUI
-Add Protobuf serialization
-Add a server capabilities for sending DS4 Data.
-Make better documentation since nobody with brain cells will understand my code.
-Tell everyone how awesome Manjaro I3 is :)
+
+ - Add GUI
+ - Add Protobuf serialization
+ - Add a server capabilities for sending DS4 Data.
+ - Make better documentation since nobody with brain cells will understand my code.
+ - Tell everyone how awesome Manjaro I3 is :)
