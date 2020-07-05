@@ -1,61 +1,10 @@
-#include <cassert>
-#include <hidapi/hidapi.h>
-#include <string>
-#include <stdio.h>
-#include <cstdint>
-#include <cstring>
-#include <cmath>
-enum e_dpadKeys {N,NE,E,SE,S,SW,W,NW};
-typedef enum e_dpadKeys dpadKeys;
-
-enum ds4keys {
-    Lx,Ly,
-    Rx,Ry,
-    TRI,CRC,X,SQR,DPAD,
-    keyR3,keyL3,OPTIONS,keySHARE,btnR2,btnL2,keyR1,keyL1,
-    L2Val,R2Val
-    };
-
-class ds4{
-public:
-    ds4();
-    ~ds4();
-    void read(int isUSB,unsigned char* buff);
-    int isPressed(ds4keys key);
-    void getDPAD(char* retStr/*return string*/);
-private:
-    void parseBT();
-    void parseUSB();
-    unsigned char dpadBits[4];
-    unsigned char* data;
-    char* dpadBits_bin; 
-    /* Data Range 0-255 */
-    uint8_t L2_val;
-    uint8_t R2_val;
-    uint8_t LY;
-    uint8_t LX;
-    uint8_t RX;
-    uint8_t RY;
-    uint8_t dpad;
-    bool tri;
-    bool crc;
-    bool x;
-    bool sqr;
-    bool R3;
-    bool L3;
-    bool OPTS;
-    bool SHARE;
-    bool R2;
-    bool L2;
-    bool R1;
-    bool L1;
-};
+#include "DS4.h"
 /*  Returns: 
     -1 if String passed isn't recognized as a valid button on DS4
     0 if String passed wasn't pressed
     1 if String passed was pressed
 */
-int ds4::isPressed(ds4keys key){
+int DS4::isPressed(ds4keys key){
     switch (key)
     {
     case Lx:
@@ -100,7 +49,7 @@ int ds4::isPressed(ds4keys key){
         return -1;
     }
 }
-void ds4::parseBT(){
+void DS4::parseBT(){
     this->LX = data[3]; 
     this->LY = data[4];
     this->RX = data[5];
@@ -129,7 +78,7 @@ void ds4::parseBT(){
     this->L2_val = data[10];
     this->R2_val = data[11];
 }
-void ds4::parseUSB(){
+void DS4::parseUSB(){
     printf("USB Parse\n");
     /* Get Axis */
     this->LX = data[1];
@@ -165,7 +114,7 @@ void ds4::parseUSB(){
 /* Returns 1-2 character string representing direction of DPAD
     -1 should never be returned but who knows 
 */
-void ds4::getDPAD(char *retStr){
+void DS4::getDPAD(char *retStr){
     switch(this->dpad){
         case 0:
             strcpy(retStr,"N");
@@ -197,15 +146,15 @@ void ds4::getDPAD(char *retStr){
     }
 }
 
-void ds4::read(int isUSB,unsigned char* buff){
+void DS4::read(int isUSB,unsigned char* buff){
     data = buff;
     /* Decide on data and buff being double pointer or std::vector */
     (isUSB) ? parseUSB() : parseBT();
 }
 
-ds4::ds4(){
+DS4::DS4(){
     this->dpadBits_bin = (char *) malloc(sizeof(char)*6);
 }
-ds4::~ds4(){
+DS4::~DS4(){
     free(this->dpadBits_bin);
 }

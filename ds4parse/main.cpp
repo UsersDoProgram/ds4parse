@@ -10,7 +10,7 @@
 #include <ctype.h>
 #include <hidapi/hidapi.h>
 #include <cassert>
-#include "ds4.h"
+#include "DS4.h"
 
 
 #define bt_vid 0x054C
@@ -53,7 +53,7 @@ int main(int argc, const char * argv[]) {
 
 
     /* Analysis */
-    ds4 myds4;
+    DS4 myds4;
     myds4.read(isUSB,dPoint);
 
     printf("△: %s\t\tO: %s\t\tX: %s\t\t□: %s\n", 
@@ -62,7 +62,7 @@ int main(int argc, const char * argv[]) {
 
     char* dpadStr = (char *) malloc(sizeof(char)*2);
     myds4.getDPAD(dpadStr);
-    printf("DPAD:%s\n",dpadStr);
+    printf("DPAD:%s,%d\n",dpadStr,myds4.isPressed(DPAD));
     
     free(dPoint);
     hid_close(ds4Dev);
