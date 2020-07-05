@@ -33,14 +33,29 @@ int main(int argc, const char * argv[]) {
         Only 28 bytes of Bluetooth Report are useful
     */
 
-    int vid,pid;
+    int res,vid,pid;
     vid = (isUSB) ? usb_vid : bt_vid;
     pid = (isUSB) ? usb_pid : bt_pid;
+    int bufLen = (isUSB) ? 10 : 12;
+    unsigned char* dPoint = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
+    hid_device* ds4Dev;
+
+    res = hid_init();
+    assert(res!=-1);
+
     printf("VID:0x%X \tPID:0x%X\tMode:%s\n",vid,pid,
     (isUSB) ? (const char *)"USB" : (const char *)"Bluetooth");
+
+    ds4Dev = hid_open(vid,pid,NULL);
+    hid_set_nonblocking(ds4Dev,0);
+    hid_read(ds4Dev,dPoint,bufLen);
+    /* Initialize Array From Data Pointer */
+
+
     /* Analysis */
-    ds4 myds4(vid,pid,isUSB);
-    myds4.read();
+    ds4 myds4;
+    myds4.read(isUSB,dPoint);
+
     printf("△: %s\t\tO: %s\t\tX: %s\t\t□: %s\n", 
     (myds4.isPressed(TRI)) ? "true" : "false", (myds4.isPressed(CRC) == 1) ? "true" : "false",
     (myds4.isPressed(X)) ? "true" : "false", (myds4.isPressed(SQR) == 1) ? "true" : "false");
@@ -48,6 +63,11 @@ int main(int argc, const char * argv[]) {
     char* dpadStr = (char *) malloc(sizeof(char)*2);
     myds4.getDPAD(dpadStr);
     printf("DPAD:%s\n",dpadStr);
-
+    
+    free(dPoint);
+    hid_close(ds4Dev);
+    hid_exit();
     return 0;
+    /* Add Serialization via JSON or Protobuff for sending through sockets*/
+    /* Determine a GUI */
 }

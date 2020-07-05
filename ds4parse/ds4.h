@@ -18,21 +18,16 @@ enum ds4keys {
 
 class ds4{
 public:
-    ds4(int vid, int pid, bool isUSB);
+    ds4();
     ~ds4();
+    void read(int isUSB,unsigned char* buff);
     int isPressed(ds4keys key);
     void getDPAD(char* retStr/*return string*/);
-    void read();
 private:
-    int bufLen;
-    hid_device* dev;
     void parseBT();
     void parseUSB();
-    unsigned char* dataPtr = NULL;
-    unsigned char data[12];
-    int vid,pid;
-    bool isUSB;
     unsigned char dpadBits[4];
+    unsigned char* data;
     char* dpadBits_bin; 
     /* Data Range 0-255 */
     uint8_t L2_val;
@@ -202,29 +197,15 @@ void ds4::getDPAD(char *retStr){
     }
 }
 
-void ds4::read(){
-    hid_read(dev,dataPtr,bufLen);
-    for(int byte=0;byte<bufLen;byte++)
-        data[byte] = * (dataPtr+byte);
+void ds4::read(int isUSB,unsigned char* buff){
+    data = buff;
+    /* Decide on data and buff being double pointer or std::vector */
     (isUSB) ? parseUSB() : parseBT();
 }
 
-ds4::ds4(int vid,int pid,bool isUSB){
-    this->dpad = -1;
-    assert( hid_init() != -1 ); 
-    this->vid = vid;
-    this->pid = pid;
-    this->isUSB = isUSB;
+ds4::ds4(){
     this->dpadBits_bin = (char *) malloc(sizeof(char)*6);
-    bufLen = (isUSB) ? 10 : 12;
-    this->dev = hid_open(vid,pid,NULL);
-    assert (dev!=NULL);
-    hid_set_nonblocking(dev,0);
-    this->dataPtr = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
 }
 ds4::~ds4(){
-    free(dataPtr);
-    hid_close(dev);
-    hid_exit();
     free(this->dpadBits_bin);
 }

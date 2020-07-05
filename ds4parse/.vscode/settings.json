@@ -1,3 +1,6 @@
 {
-    "C_Cpp.default.includePath": ["/usr/include"]
+    "C_Cpp.default.includePath": [
+        "/usr/include",
+        "/usr/include/qt"
+    ]
 }
