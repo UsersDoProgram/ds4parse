@@ -1,5 +1,0 @@
-syntax="proto2";
-package DS4Proto;
-message DS4Data{
-
-}
