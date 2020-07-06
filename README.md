@@ -25,7 +25,10 @@ For Linux:
 		Then find those shared lib files and point it to g++ and link.
 </pre>
 -***
+Example of how to compile code that makes use of `#include "DS4.h"`:<br>
 
+     g++ -std=c++14 -Wall -L/usr/lib/libhidapi-hidraw.so.0.0.0 -lhidapi-hidraw  ../lib/DS4.o main.cpp -o main
+<br>Where "../lib/DS4.o" is the location of the DS4 object file.<br>
 -TODO
 
 ***
