@@ -33,8 +33,12 @@ Example of how to compile code that makes use of `#include "DS4.h"`:<br>
 
 ***
 
- - Add GUI
- - Add Protobuf serialization
- - Add a server capabilities for sending DS4 Data.
+ -  **DS4Display**
+	 - Add GUI Button Display Example
+ - **DS4RPI**
+	 - Add Protobuf serialization
+	 - Add a server capabilities for sending DS4 Data to RPI
+ - **DS4-2-PC** 
+	 - Keyboard and Mouse Being controlled via DS4 DPAD and Axis 
  - Make better documentation since nobody with brain cells will understand my code.
  - Tell everyone how awesome Manjaro I3 is :)
