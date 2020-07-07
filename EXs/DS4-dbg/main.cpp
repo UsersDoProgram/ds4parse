@@ -60,6 +60,7 @@ int main(int argc, const char * argv[]) {
     (myds4.isPressed(TRI)) ? "true" : "false", (myds4.isPressed(CRC) == 1) ? "true" : "false",
     (myds4.isPressed(X)) ? "true" : "false", (myds4.isPressed(SQR) == 1) ? "true" : "false");
 
+    printf("R2:%u\tL2:%u\n",(unsigned int)myds4.isPressed(R2Val),(unsigned int)myds4.isPressed(L2Val));
     char* dpadStr = (char *) malloc(sizeof(char)*2);
     myds4.getDPAD(dpadStr);
     printf("DPAD:%s,%d\n",dpadStr,myds4.isPressed(DPAD));
