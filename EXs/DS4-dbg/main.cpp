@@ -56,11 +56,14 @@ int main(int argc, const char * argv[]) {
     DS4 myds4;
     myds4.read(isUSB,dPoint);
 
+    printf("\t\t\t\t----DS4 DBG----\t\t\t\t\n");
     printf("△: %s\t\tO: %s\t\tX: %s\t\t□: %s\n", 
     (myds4.isPressed(TRI)) ? "true" : "false", (myds4.isPressed(CRC) == 1) ? "true" : "false",
     (myds4.isPressed(X)) ? "true" : "false", (myds4.isPressed(SQR) == 1) ? "true" : "false");
 
-    printf("R2:%u\tL2:%u\n",(unsigned int)myds4.isPressed(R2Val),(unsigned int)myds4.isPressed(L2Val));
+    printf("L2:%u\tR2:%u\t",(unsigned int)myds4.isPressed(L2Val),(unsigned int)myds4.isPressed(R2Val));
+    printf("L3:(%u,%u)\tR3(%u,%u)\n",(unsigned int)myds4.isPressed(Lx),(unsigned int)myds4.isPressed(Ly),
+    myds4.isPressed(Rx),myds4.isPressed(Ry));
     char* dpadStr = (char *) malloc(sizeof(char)*2);
     myds4.getDPAD(dpadStr);
     printf("DPAD:%s,%d\n",dpadStr,myds4.isPressed(DPAD));
