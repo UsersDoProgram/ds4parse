@@ -47,6 +47,7 @@ int main(int argc, const char * argv[]) {
     (isUSB) ? (const char *)"USB" : (const char *)"Bluetooth");
 
     ds4Dev = hid_open(vid,pid,NULL);
+    assert(ds4Dev != NULL);
     hid_set_nonblocking(ds4Dev,0);
     hid_read(ds4Dev,dPoint,bufLen);
     /* Initialize Array From Data Pointer */
