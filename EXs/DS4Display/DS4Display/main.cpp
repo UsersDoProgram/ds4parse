@@ -28,9 +28,9 @@ static void collect(MainWindow* QtWin){
     DS4 ds4Dev;
     unsigned char* data = (unsigned char*) malloc(sizeof(unsigned char)*bufLen);
     printf("Holo\n");
-    int c = 0;
+    int c = 0;//Debug int delete this later...
     while(true){
-        (c==0) ? printf("1 time\n") : c++; 
+        (c==0) ? printf("1 time\n") : c++; //Debug String... Delete this later.
         c++;
         hid_read(dev,data,bufLen);
         ds4Dev.read(false,data);
