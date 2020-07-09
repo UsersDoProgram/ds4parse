@@ -7,13 +7,6 @@
 #include <cassert>
 #include <future>
 #include <cstdio>
-int render(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
-}
 
 static void collect(MainWindow* QtWin){
     int res = hid_init();
