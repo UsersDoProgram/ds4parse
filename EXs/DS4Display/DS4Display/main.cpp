@@ -23,14 +23,20 @@ static void collect(MainWindow* QtWin){
     printf("Holo\n");
     int c = 0;//Debug int delete this later...
     while(true){
-        (c==0) ? printf("1 time\n") : c++; //Debug String... Delete this later.
+        (c==0) ? printf("1 time\n") : 1; //Debug String... Delete this later.
         c++;
         hid_read(dev,data,bufLen);
         ds4Dev.read(false,data);
+        /* Determine if button is pressed or not */
         (ds4Dev.isPressed(TRI)) ? QtWin->vis(triLBL,1) : QtWin->vis(triLBL,0);
         (ds4Dev.isPressed(X)) ? QtWin->vis(xLBL,1) : QtWin->vis(xLBL,0);
         (ds4Dev.isPressed(CRC)) ? QtWin->vis(crcLBL,1) : QtWin->vis(crcLBL,0);
         (ds4Dev.isPressed(SQR)) ? QtWin->vis(sqrLBL,1) : QtWin->vis(sqrLBL,0);
+        /* Get DPAD DATA */
+        QtWin->vis(DpadLBL,ds4Dev.isPressed(DPAD));
+        /* L2 and R2 Intensity */
+        QtWin->vis(L2LBL,ds4Dev.isPressed(L2Val));
+        QtWin->vis(R2LBL,ds4Dev.isPressed(R2Val));
     }
     hid_set_nonblocking(dev,0);    
 }

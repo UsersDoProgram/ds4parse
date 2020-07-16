@@ -1,2 +1,11 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/img">
+        <file>img/triangle.png</file>
+        <file>img/xbtn.jpeg</file>
+        <file>img/crc.png</file>
+        <file>img/r2.png</file>
+        <file>img/sqr.png</file>
+        <file>img/dpad.jpg</file>
+        <file>img/L2.jpeg</file>
+    </qresource>
+</RCC>

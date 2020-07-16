@@ -13,7 +13,9 @@ class MainWindow : public QMainWindow
 
 public:
     //bool isHidden(enum LBL target);
-    void vis(enum LBL target,bool opt);
+    void vis(enum LBL target,int opt);
+    std::string dpadBtn;
+    std::string bumpers;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
